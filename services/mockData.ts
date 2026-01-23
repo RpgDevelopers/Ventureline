@@ -5,25 +5,25 @@ export const INITIAL_DESTINATIONS: Destination[] = [
     id: '1',
     name: 'Yosemite Valley',
     location: 'California, USA',
-    image: 'https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?auto=format&fit=crop&q=80&w=2070'
+    image: 'https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: '2',
     name: 'Blue Ridge',
     location: 'Virginia, USA',
-    image: 'https://images.unsplash.com/photo-1511884642898-4c92249f20b6?auto=format&fit=crop&q=80&w=2070'
+    image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: '3',
     name: 'Swiss Alps',
     location: 'Bernese Oberland, CH',
-    image: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&q=80&w=2070'
+    image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: '4',
     name: 'Lake Louise',
     location: 'Banff, Canada',
-    image: 'https://images.unsplash.com/photo-1536637706725-c96e9916d664?auto=format&fit=crop&q=80&w=2070'
+    image: 'https://images.unsplash.com/photo-1536637706725-c96e9916d664?auto=format&fit=crop&q=80&w=800'
   }
 ];
 
@@ -37,7 +37,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     price: 125,
     tags: ['WiFi', 'Fresh Water', 'Power'],
     isEco: true,
-    image: 'https://images.unsplash.com/photo-1496545672479-7ac37b9698a7?auto=format&fit=crop&q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&q=80&w=800',
     description: 'Nestled in a vibrant meadow of wildflowers with a backdrop of snow-capped peaks, this eco-friendly stay offers the perfect blend of nature and comfort. Enjoy solar-powered amenities and fresh mountain spring water.',
     amenities: ['Solar Power', 'Spring Water', 'Composting Toilet', 'Fire Pit', 'Hiking Trails']
   },
@@ -50,7 +50,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     price: 210,
     tags: ['Firepit', 'Kitchen', 'Heater'],
     isNew: true,
-    image: 'https://images.unsplash.com/photo-1449156493391-d2cfa28e468b?auto=format&fit=crop&q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=800',
     description: 'A modern A-frame cabin tucked away in the Catskills. Features a full chef\'s kitchen, wood-burning stove, and floor-to-ceiling windows for stargazing from the comfort of your bed.',
     amenities: ['Full Kitchen', 'Wood Stove', 'Hot Water', 'WiFi', 'Deck']
   },
@@ -62,7 +62,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     reviews: 215,
     price: 45,
     tags: ['Kayaks', 'Trails', 'Pets'],
-    image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&q=80&w=800',
     description: 'Primitive camping at its finest right on the water\'s edge. Launch your kayak from your site or hike the surrounding granite peaks. Pets are welcome!',
     amenities: ['Kayak Launch', 'Bear Box', 'Picnic Table', 'Pit Toilet']
   },
@@ -70,7 +70,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     id: 's1',
     name: 'Emerald Bay Viewpoints',
     location: 'South Lake Tahoe, CA',
-    image: 'https://images.unsplash.com/photo-1552590635-27c2c2128abf?auto=format&fit=crop&q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1548567117-02327f1c9bb6?auto=format&fit=crop&q=80&w=800',
     rating: 4.9,
     reviews: 128,
     price: 75,
@@ -83,7 +83,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     id: 's2',
     name: 'Pine Grove Retreat',
     location: 'Tahoe City, CA',
-    image: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=800',
     rating: 4.7,
     reviews: 84,
     price: 42,
@@ -96,7 +96,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     id: 's3',
     name: 'Whispering Pines Cabin',
     location: 'Kings Beach, CA',
-    image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&q=80&w=800',
     rating: 4.9,
     reviews: 42,
     price: 185,
@@ -109,7 +109,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     id: 'y1',
     name: 'Half Dome Village',
     location: 'Yosemite Valley, CA',
-    image: 'https://images.unsplash.com/photo-1549821703-d227d8ce08e3?auto=format&fit=crop&q=80&w=2070',
+    image: 'https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?auto=format&fit=crop&q=80&w=800',
     rating: 4.8,
     reviews: 320,
     price: 150,

@@ -64,7 +64,7 @@ export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateB
             <div 
               className="relative min-h-[560px] flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden bg-cover bg-center" 
               style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1534880606858-29b0e8a24e8d?auto=format&fit=crop&q=80&w=2070")`
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=2670")`
               }}
             >
               <div className="relative z-10 flex flex-col gap-6 text-center max-w-2xl mb-12">
