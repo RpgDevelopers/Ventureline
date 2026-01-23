@@ -53,7 +53,7 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
       <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-landing-border px-4 md:px-10 py-3 bg-white dark:bg-search-bg z-20 shrink-0 transition-colors duration-300">
         <div className="flex items-center gap-4 md:gap-8 flex-1">
           <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
-            <img src="https://cdn.imgchest.com/files/9e68a1f9d5e1.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
+            <img src="https://cdn.imgchest.com/files/91aa51b5d4a5.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
           </div>
           <form onSubmit={handleSearch} className="flex flex-col w-full md:max-w-md h-10">
             <div className="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-none shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary/50">

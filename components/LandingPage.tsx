@@ -33,7 +33,7 @@ export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateB
       <header className="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-landing-border bg-white/80 dark:bg-landing-bg/80 backdrop-blur-md px-6 md:px-20 py-4 transition-colors duration-300">
         <div className="max-w-[1280px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.location.reload()}>
-            <img src="https://cdn.imgchest.com/files/9e68a1f9d5e1.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
+            <img src="https://cdn.imgchest.com/files/91aa51b5d4a5.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
           </div>
           <nav className="hidden md:flex items-center gap-10">
             <button onClick={() => onSearch({ location: '', dates: '', guests: '' })} className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">Explore</button>
@@ -292,7 +292,7 @@ function Footer() {
         <div className="col-span-2">
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center justify-center">
-               <img src="https://cdn.imgchest.com/files/9e68a1f9d5e1.png" alt="Ventureline" className="h-10 w-auto object-contain" />
+               <img src="https://cdn.imgchest.com/files/91aa51b5d4a5.png" alt="Ventureline" className="h-10 w-auto object-contain" />
             </div>
           </div>
           <p className="text-slate-500 dark:text-white/40 text-sm leading-relaxed mb-8 max-w-xs">Connecting people with the great outdoors. We facilitate sustainable travel and meaningful experiences in nature's backyard.</p>
