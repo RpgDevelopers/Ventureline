@@ -5,7 +5,7 @@ export const INITIAL_DESTINATIONS: Destination[] = [
     id: '1',
     name: 'Yosemite Valley',
     location: 'California, USA',
-    image: 'https://images.unsplash.com/photo-1426604966848-d3ad1e27becc?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: '2',
@@ -50,7 +50,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     price: 210,
     tags: ['Firepit', 'Kitchen', 'Heater'],
     isNew: true,
-    image: 'https://images.unsplash.com/photo-1449156493391-d2cfa28e468b?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=800',
     description: 'A modern A-frame cabin tucked away in the Catskills. Features a full chef\'s kitchen, wood-burning stove, and floor-to-ceiling windows for stargazing from the comfort of your bed.',
     amenities: ['Full Kitchen', 'Wood Stove', 'Hot Water', 'WiFi', 'Deck']
   },
