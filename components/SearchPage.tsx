@@ -1,55 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Campsite } from '../types';
+import { api } from '../services/api';
 
 interface SearchPageProps {
   onBack: () => void;
   initialLocation?: string;
   isDark: boolean;
   toggleTheme: () => void;
+  onNavigateDetails: (id: string) => void;
+  onNavigateBookings: () => void;
+  onNavigateFavorites: () => void;
 }
 
-const SEARCH_RESULTS: Campsite[] = [
-  {
-    id: 's1',
-    name: 'Emerald Bay Viewpoints',
-    location: '0.5 miles from South Lake Tahoe',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAt_zCRgoYO0CPzOx6IB_JM_01su9mqURjcY99L41gVT0VnP3YaXoYCniIhVlzcK1Plw4tFbTJqqj45Un7Yi9p0kwb6eb5brPDG6L0ZvvTZ4MFWBXvpc9YDkw0NbyTm9vBHn_CFNU7DeASDvstC-BVa3HIEsibhrHopklMkJF5UmI4-v7BAfsfXrp-_cJCQCe9lEPxP4XZZkFDSp9CVLhoL65h33dLHTlM7_QSHwBrrReQI3ydAAxe_McACwSJSZ5fr2Hg4qHLoj-mR',
-    rating: 4.9,
-    reviews: 128,
-    price: 75,
-    tags: ['Near Lake', 'Electric Hookup', 'RV/Tent'],
-    coordinates: { top: '35%', left: '45%' }
-  },
-  {
-    id: 's2',
-    name: 'Pine Grove Retreat',
-    location: '2.1 miles from Tahoe City',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyuQXJGD7fdxvDqnqwmoGNuTH2r7AkWJvJpQRqwxbue66PS5v7xsIbSxFwnYQZlPMVew9q7C9c7fZYQ6RzQN0Ok0p4dsKxohSHkTRwLJGC9PbJOm-giLMcVmn3MaIYURzeNxEkGGkcbTuAzDfZ2HAA6sRs7bVa_-_LFY8ca2PLLcxgaS5MrBu8sjf95K1ZSNsnt0xG_J_Y_3SBcQDyCLWk_A26A1ta0X5o9iqhU9c5CfbhdOvjDaMz6ewFTNrKLc-A9kIBGlyBrND3',
-    rating: 4.7,
-    reviews: 84,
-    price: 42,
-    tags: ['Pet Friendly', 'Showers'],
-    coordinates: { top: '55%', left: '30%' }
-  },
-  {
-    id: 's3',
-    name: 'Whispering Pines Cabin',
-    location: '1.5 miles from Kings Beach',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC7_9vp3gKuc2aamFAIkt2-pB1_wmoCw8LrN_gpwmOyjCcCh5nRbKkxOIzI1J7ZNEyyJda040_S8jHfaSKsBt0V7VwBvRm-t2Sktr8LNQoDbl4LQGLaelCoMS1xlSrFIeA4q0OqwqMfOkTQkRbPVMiCB_8sUOP0Bp46AEojsCrzX0tSo9u0z-h4C_Eabv-Vyr7en--8hgj9uMe34QTy5cLauIWiWuDr2ljryK23d6VofgXOipZmzIKg-6ZaJ03rQNBVXoz2Ab82IV25',
-    rating: 4.9,
-    reviews: 42,
-    price: 185,
-    tags: ['Wi-Fi', 'Fire Pit'],
-    coordinates: { top: '20%', left: '65%' }
-  }
-];
-
-// Additional mock for map pin only
-const EXTRA_PIN = { price: 35, top: '70%', left: '55%' };
-
-export default function SearchPage({ onBack, initialLocation, isDark, toggleTheme }: SearchPageProps) {
+export default function SearchPage({ onBack, initialLocation, isDark, toggleTheme, onNavigateDetails, onNavigateBookings, onNavigateFavorites }: SearchPageProps) {
   const [searchValue, setSearchValue] = useState(initialLocation || 'Lake Tahoe, CA');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [campsites, setCampsites] = useState<Campsite[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [filter, setFilter] = useState<'all' | 'eco' | 'pets' | 'instant'>('all');
+
+  useEffect(() => {
+    // Initial fetch
+    const fetchData = async () => {
+      const data = await api.getCampsites(searchValue);
+      setCampsites(data);
+    };
+    fetchData();
+    setFavorites(api.getFavorites());
+  }, [searchValue]);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const data = await api.getCampsites(searchValue);
+    setCampsites(data);
+  };
+
+  const toggleFavorite = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    api.toggleFavorite(id);
+    setFavorites(api.getFavorites());
+  };
+
+  const filteredCampsites = campsites.filter(site => {
+    if (filter === 'eco') return site.isEco;
+    if (filter === 'pets') return site.tags.some(t => t.toLowerCase().includes('pet'));
+    return true;
+  });
 
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-search-bg overflow-hidden text-slate-900 dark:text-white font-sans transition-colors duration-300">
@@ -59,7 +55,7 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
           <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
             <img src="https://cdn.imgchest.com/files/91aa51b5d4a5.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
           </div>
-          <label className="flex flex-col w-full md:max-w-md h-10">
+          <form onSubmit={handleSearch} className="flex flex-col w-full md:max-w-md h-10">
             <div className="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-none shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary/50">
                <div className="text-slate-400 dark:text-[#9db8a6] flex bg-white dark:bg-landing-border items-center justify-center pl-4">
                   <span className="material-symbols-outlined text-[20px]">search</span>
@@ -72,14 +68,14 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
                   onChange={(e) => setSearchValue(e.target.value)}
                />
             </div>
-          </label>
+          </form>
         </div>
         
         <div className="flex flex-1 justify-end gap-6 items-center">
           <nav className="hidden lg:flex items-center gap-8">
-            <a href="#" className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Discover</a>
-            <a href="#" className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Bookings</a>
-            <a href="#" className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Favorites</a>
+            <button onClick={() => setFilter('all')} className={`text-sm font-medium hover:text-primary transition-colors ${filter === 'all' ? 'text-primary' : 'text-slate-600 dark:text-white'}`}>Discover</button>
+            <button onClick={onNavigateBookings} className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Bookings</button>
+            <button onClick={onNavigateFavorites} className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Favorites</button>
           </nav>
           <div className="flex gap-2">
             <button 
@@ -108,17 +104,14 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
       {/* Filter Bar */}
       <div className="px-6 py-3 border-b border-slate-200 dark:border-landing-border bg-white dark:bg-search-bg z-10 flex items-center justify-between shrink-0 transition-colors duration-300">
         <div className="flex gap-3 overflow-x-auto no-scrollbar mask-linear-fade">
-          {['Price Range', 'Type of Stay', 'Amenities'].map((filter) => (
-             <button key={filter} className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-landing-border border border-slate-200 dark:border-none px-4 text-slate-700 dark:text-white text-sm font-medium shadow-sm hover:border-primary transition-colors whitespace-nowrap">
-                <span>{filter}</span>
-                <span className="material-symbols-outlined text-[18px]">expand_more</span>
-             </button>
-          ))}
-          <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/30 px-4 text-primary text-sm font-semibold shadow-sm whitespace-nowrap">
-             <span className="material-symbols-outlined text-[18px]">flash_on</span>
-             <span>Instant Book</span>
+          <button onClick={() => setFilter('all')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'all' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
+             <span>All</span>
           </button>
-          <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-landing-border border border-slate-200 dark:border-none px-4 text-slate-700 dark:text-white text-sm font-medium shadow-sm hover:border-primary transition-colors whitespace-nowrap">
+          <button onClick={() => setFilter('eco')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'eco' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
+             <span className="material-symbols-outlined text-[18px]">eco</span>
+             <span>Eco Friendly</span>
+          </button>
+          <button onClick={() => setFilter('pets')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'pets' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
              <span className="material-symbols-outlined text-[18px]">pets</span>
              <span>Pet Friendly</span>
           </button>
@@ -141,15 +134,15 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
         {/* Left Panel: List */}
         <div className="w-full lg:w-[45%] xl:w-[500px] overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-search-bg border-r border-slate-200 dark:border-landing-border pb-10 transition-colors duration-300">
           <div className="flex flex-wrap gap-2 p-6 pb-2">
-            <a href="#" className="text-slate-400 dark:text-[#9db8a6] text-xs font-medium uppercase tracking-wider hover:text-primary transition-colors">California</a>
+            <span className="text-slate-400 dark:text-[#9db8a6] text-xs font-medium uppercase tracking-wider">Locations</span>
             <span className="text-slate-300 dark:text-landing-border text-xs">/</span>
             <span className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider">{searchValue.split(',')[0]}</span>
           </div>
 
           <div className="px-6 py-4 flex flex-col gap-1">
-             <h1 className="text-slate-900 dark:text-white text-2xl font-bold leading-tight">Campsites in {searchValue.split(',')[0]}</h1>
+             <h1 className="text-slate-900 dark:text-white text-2xl font-bold leading-tight">Stays in {searchValue.split(',')[0]}</h1>
              <div className="flex items-center justify-between">
-                <p className="text-slate-500 dark:text-[#9db8a6] text-sm">124 stays available for selected dates</p>
+                <p className="text-slate-500 dark:text-[#9db8a6] text-sm">{filteredCampsites.length} stays available</p>
                 <button className="flex items-center gap-1 text-xs font-bold text-slate-700 dark:text-white bg-slate-100 dark:bg-landing-border px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-landing-border/80 transition-colors">
                   Sort: Recommended <span className="material-symbols-outlined text-[14px]">swap_vert</span>
                 </button>
@@ -157,9 +150,10 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
           </div>
 
           <div className="flex flex-col gap-6 p-6 pt-2">
-            {SEARCH_RESULTS.map((site) => (
+            {filteredCampsites.map((site) => (
               <div 
                 key={site.id}
+                onClick={() => onNavigateDetails(site.id)}
                 onMouseEnter={() => setHoveredId(site.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 className={`group flex flex-col gap-3 rounded-xl bg-white dark:bg-search-surface border transition-all cursor-pointer overflow-hidden
@@ -176,8 +170,11 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
                    {site.id === 's3' && (
                      <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">A-Frame</div>
                    )}
-                   <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/40 transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">favorite</span>
+                   <button 
+                    onClick={(e) => toggleFavorite(e, site.id)}
+                    className={`absolute top-3 right-3 h-8 w-8 rounded-full backdrop-blur-md flex items-center justify-center transition-colors ${favorites.includes(site.id) ? 'bg-primary text-white' : 'bg-white/20 text-white hover:bg-white/40'}`}
+                   >
+                      <span className="material-symbols-outlined text-[20px]">{favorites.includes(site.id) ? 'favorite' : 'favorite_border'}</span>
                    </button>
                 </div>
                 <div className="p-4 pt-0">
@@ -230,13 +227,14 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
               </div>
 
               {/* Pins */}
-              {SEARCH_RESULTS.map((site) => (
+              {filteredCampsites.filter(s => s.coordinates).map((site) => (
                 <div 
                   key={site.id} 
                   className="absolute pointer-events-auto transition-transform duration-300"
                   style={{ top: site.coordinates?.top, left: site.coordinates?.left, transform: hoveredId === site.id ? 'scale(1.1) translateY(-10px)' : 'scale(1)' }}
                   onMouseEnter={() => setHoveredId(site.id)}
                   onMouseLeave={() => setHoveredId(null)}
+                  onClick={() => onNavigateDetails(site.id)}
                 >
                    <div className="relative group">
                       <div className={`
@@ -252,18 +250,6 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
                    </div>
                 </div>
               ))}
-
-              {/* Extra Pin */}
-              <div 
-                 className="absolute pointer-events-auto top-[70%] left-[55%]"
-              >
-                  <div className="relative">
-                    <div className="bg-white dark:bg-landing-border text-slate-900 dark:text-white font-bold px-3 py-1.5 rounded-full shadow-lg text-sm hover:bg-primary hover:text-white transition-all cursor-pointer">
-                        ${EXTRA_PIN.price}
-                    </div>
-                    <div className="w-3 h-3 bg-white dark:bg-landing-border rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2"></div>
-                  </div>
-              </div>
 
               {/* Floating Bottom Tip */}
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 pointer-events-auto bg-search-bg/80 backdrop-blur-md border border-white/10 px-6 py-3 rounded-full flex items-center gap-4 shadow-xl">

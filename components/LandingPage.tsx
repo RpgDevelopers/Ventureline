@@ -1,89 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Destination, Amenity, Campsite } from '../types';
+import { INITIAL_DESTINATIONS, INITIAL_CAMPSITES, AMENITIES } from '../services/mockData';
 
 interface LandingPageProps {
   onSearch: (params: { location: string; dates: string; guests: string }) => void;
   isDark: boolean;
   toggleTheme: () => void;
+  onNavigateBookings: () => void;
+  onNavigateFavorites: () => void;
 }
 
-const DESTINATIONS: Destination[] = [
-  {
-    id: '1',
-    name: 'Yosemite Valley',
-    location: 'California, USA',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCFImhc2ZeCFd1iTwypp91B7NGzV-mtmwT_HDrmzD83jyvU1QWrCS7ksZ8NJvU_2nfA4rplFTowgGX6g3bnoXlxEtOsjWDusnAFA5h2X1NDI1oYXf7-B6PI0h9p42JzF-oG7kn7Kn9B4QFtU2MNC7JXZYPuDPJF7zbUI-IE_KvX_8FbEervIbMXL8tyIhL1N8MiB7EjblWuqfMDbNsh9klIZRSoqh5GkCEbXwfiQWhzE8worA4kjeL7-jnbrMiJLISDETuVRHQdmCK'
-  },
-  {
-    id: '2',
-    name: 'Blue Ridge',
-    location: 'Virginia, USA',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBe5X4JWkLoLmusze9XibK9z1l2wNxFMJgTbaeyjAB38cH6tHlIxJXyE0BSQGWJtlueIpwn11nvlewR9qwXXAqU9MxV-UoMdaX8z6zP7k4hnl_-3MlJLlnx-X588hlJRgca_AhCtk_9vKUpJc19GvF8CBNK4Wf4qOg_vhKjmqiozidzWzI3u8NkNbs63GcMJZupZ6dr4OL_fNJqQFBAXgcT9aTWE1maKMbtcuvw445XaBLe8441eQgyLPYCG7p_B5ti8Z9m79_Z_2N0'
-  },
-  {
-    id: '3',
-    name: 'Swiss Alps',
-    location: 'Bernese Oberland, CH',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA5_UKu6EpJYdrsBhRGSWypOHjOrJJOH2PP7Q7xjnopoEL47x6iuo350KjaefCkZHR4vEER0doZoiVVIdtPOsYCSegPm_Bi6A-jSwtYWATNtOkJpDpjt5Pc6Lx9OpLSTiaM_K9J-TjpQ1b_QNSs1XjsuZWdLkeJcZIFGQ23g49-YZk6-FN4ZUtJewEdS6yKu6u3-okqTZKiv5OURa0slHkTGVXbDGG-qnP2JSZGLqScP73sT1uWQBj_XF2fjAt3To0HGkmS4xWbd1kM'
-  },
-  {
-    id: '4',
-    name: 'Lake Louise',
-    location: 'Banff, Canada',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkJLGMyJFzYZNwEJjQCzojYoI3v6az6MfT1ngMfk2Blz5cAxCzZFQu6uNhAaFfJFpxnMC0OmLfxvWd0GUr6fe2U_JvOpuyUx7EnbzB-kicLK7vwVD8t0NM5vuZ-6ij9HhyGjk0Kr5UPRTb71BDKbFLUg2eETZsTIT0q8dR3yutSS0PquPTwzJ139qR29dA-KFcUsDJtLJXN9lkXZZx4gf5aW1EUhw9f153O51pxXEmzjd9ibpG__wiHG_NvxoYl3tS42a8oLpuDsfr'
-  }
-];
-
-const AMENITIES: Amenity[] = [
-  { icon: 'pets', title: 'Pet Friendly', description: 'Bring your furry companions along for the hike.' },
-  { icon: 'eco', title: 'Eco-Conscious', description: 'Sustainable practices and minimal trace sites.' },
-  { icon: 'wifi', title: 'Remote Ready', description: 'High-speed satellite internet for nomads.' },
-  { icon: 'local_fire_department', title: 'Campfire Sites', description: 'Designated pits and ready-to-use firewood.' },
-];
-
-const POPULAR_SITES: Campsite[] = [
-  {
-    id: 'p1',
-    name: 'Wildflower Meadow Stays',
-    location: 'Glacier National Park, MT',
-    rating: 4.9,
-    reviews: 120,
-    price: 125,
-    tags: ['WiFi', 'Fresh Water', 'Power'],
-    isEco: true,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxpKN_yJO418JFYYpQsflSbSfXugTwOaIcXy-ci18qwfxmDs_TidgwqngmHiuAHEYFNCC5luFVBQ8ODz3CdbwJGHQMZcf0wny8C0NSmEcT1gvJn8NdtGpvo3tugUxEBDbz1yCeDGOO0kBneE8iLKvAPGd3yzjLGqBZPfMj9qXmFUyx4t2lKo-tcrsxYDOEGMSiXzUo9cpA5adKXByE1Ua0AjIioXSlw5ghyvBH8vBTWd9vq2R4eO5TZmfTClopjU2zy-tj6PtQTupk'
-  },
-  {
-    id: 'p2',
-    name: 'The Pine Cone A-Frame',
-    location: 'Catskill Mountains, NY',
-    rating: 5.0,
-    reviews: 42,
-    price: 210,
-    tags: ['Firepit', 'Kitchen', 'Heater'],
-    isNew: true,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjqa7hVJhIPTJjM0vi6dkp3bW4JEEvRfUQ9UqE9UwJY44NvmyCRDuOt0uRqa1wWIJlFI8JvBgHx24gwvq9t_qcgPlE1nWkll44THBz7fBZ5DX0ZLsOJcw0-QJaEVdTSfHBQ50Gq3f_D6RAL6ZJFn-sxJCJgmK3CeAPy6qpX9ORyT80Rqt2-Qi2xtxeBIkLEs6eYquaMOYRA6jXWrXHRuX7gAjNI45h9T4jwCyDaQ9eVSJ_j9IKBwpgQbJHSqYdcCKq56gvmW1X9ugS'
-  },
-  {
-    id: 'p3',
-    name: 'Lakeside Wilds',
-    location: 'Desolation Wilderness, CA',
-    rating: 4.7,
-    reviews: 215,
-    price: 45,
-    tags: ['Kayaks', 'Trails', 'Pets'],
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDISNq28xfc3ZWGlM1r6Pd5xnwIAnnulfWaWWaxfYzZg9lhV2CegYWjehvGCEi6xEfSo0N2_MtVNTdsGrjccb1_oFYgN277fcIrQ6yA-QhQxLBJQxA7eX2oetiLpThDjt9V7YpfxbW8W0N5cgapH-I3AtbMNqSFJQK_EI5BJVetPl5c5AwHaUPUwO_S2QLgBqZ-Fbk4glZPezrtM8DtK5vMfT0dWg498ZIm7ka4K2ob5lzux2yi_75yYjuA4mXHbSsq8bukPoGUBHgR'
-  }
-];
-
-export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPageProps) {
+export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateBookings, onNavigateFavorites }: LandingPageProps) {
   const [location, setLocation] = useState('');
   const [dates, setDates] = useState('');
   const [guests, setGuests] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch({ location, dates, guests });
+  };
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubscribed(true);
+    setTimeout(() => setSubscribed(false), 3000);
   };
 
   return (
@@ -91,14 +32,13 @@ export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPa
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-landing-border bg-white/80 dark:bg-landing-bg/80 backdrop-blur-md px-6 md:px-20 py-4 transition-colors duration-300">
         <div className="max-w-[1280px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.location.reload()}>
             <img src="https://cdn.imgchest.com/files/91aa51b5d4a5.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
           </div>
           <nav className="hidden md:flex items-center gap-10">
-            <a href="#" className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">Explore</a>
-            <a href="#" className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">Stays</a>
-            <a href="#" className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">About</a>
-            <a href="#" className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">Destinations</a>
+            <button onClick={() => onSearch({ location: '', dates: '', guests: '' })} className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">Explore</button>
+            <button onClick={onNavigateBookings} className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">Bookings</button>
+            <button onClick={onNavigateFavorites} className="text-slate-600 dark:text-white/80 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors">Favorites</button>
           </nav>
           <div className="flex items-center gap-3">
             <button 
@@ -197,12 +137,12 @@ export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPa
                 <span className="text-primary font-bold text-sm uppercase tracking-widest mb-2 block">Top Picked</span>
                 <h2 className="text-slate-900 dark:text-white text-3xl font-bold">Trending Destinations</h2>
               </div>
-              <button className="flex items-center gap-2 text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition-colors group">
+              <button onClick={() => onSearch({ location: '', dates: '', guests: '' })} className="flex items-center gap-2 text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition-colors group">
                 View all <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
               </button>
             </div>
             <div className="flex overflow-x-auto gap-6 no-scrollbar pb-6 -mx-6 px-6 md:mx-0 md:px-0">
-              {DESTINATIONS.map((dest) => (
+              {INITIAL_DESTINATIONS.map((dest) => (
                 <div key={dest.id} className="flex-none w-72 md:w-80 group cursor-pointer" onClick={() => onSearch({ location: dest.name, dates: '', guests: '' })}>
                   <div className="relative aspect-[4/5] overflow-hidden rounded-2xl mb-4">
                     <img 
@@ -261,7 +201,7 @@ export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPa
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {POPULAR_SITES.map((site) => (
+              {INITIAL_CAMPSITES.slice(0, 3).map((site) => (
                 <div key={site.id} className="bg-white dark:bg-landing-surface rounded-2xl overflow-hidden border border-slate-200 dark:border-landing-border hover:shadow-2xl hover:shadow-primary/5 transition-all group">
                   <div className="relative h-64 overflow-hidden">
                     <img 
@@ -278,8 +218,8 @@ export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPa
                     {site.tags.includes('Pets') && !site.isEco && !site.isNew && (
                        <div className="absolute top-4 left-4 bg-primary text-landing-bg px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Pet Friendly</div>
                     )}
-                    <button className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-landing-bg transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">favorite</span>
+                    <button onClick={() => onSearch({ location: site.name, dates: '', guests: '' })} className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-landing-bg transition-colors">
+                      <span className="material-symbols-outlined text-[20px]">search</span>
                     </button>
                   </div>
                   <div className="p-6">
@@ -295,14 +235,14 @@ export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPa
                       {site.tags.slice(0, 3).map((tag, i) => (
                          <span key={i} className="flex items-center gap-1">
                            <span className="material-symbols-outlined text-sm">
-                             {tag === 'WiFi' ? 'wifi' : 
-                              tag === 'Fresh Water' ? 'water_drop' : 
-                              tag === 'Power' ? 'bolt' : 
-                              tag === 'Firepit' ? 'fireplace' : 
-                              tag === 'Kitchen' ? 'kitchen' : 
-                              tag === 'Heater' ? 'ac_unit' : 
-                              tag === 'Kayaks' ? 'kayaking' : 
-                              tag === 'Trails' ? 'hiking' : 
+                             {tag.includes('WiFi') ? 'wifi' : 
+                              tag.includes('Water') ? 'water_drop' : 
+                              tag.includes('Power') ? 'bolt' : 
+                              tag.includes('Fire') ? 'fireplace' : 
+                              tag.includes('Kitchen') ? 'kitchen' : 
+                              tag.includes('Heat') ? 'ac_unit' : 
+                              tag.includes('Kayak') ? 'kayaking' : 
+                              tag.includes('Trail') ? 'hiking' : 
                               'pets'}
                             </span> 
                             {tag}
@@ -314,7 +254,7 @@ export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPa
                         <span className="text-slate-900 dark:text-white text-2xl font-bold">${site.price}</span>
                         <span className="text-slate-500 dark:text-white/40 text-sm">/ night</span>
                       </div>
-                      <button className="px-6 py-2 rounded-lg bg-slate-50 dark:bg-landing-surface border border-primary text-primary font-bold hover:bg-primary hover:text-landing-bg transition-all">Book Now</button>
+                      <button onClick={() => onSearch({ location: site.location, dates: '', guests: '' })} className="px-6 py-2 rounded-lg bg-slate-50 dark:bg-landing-surface border border-primary text-primary font-bold hover:bg-primary hover:text-landing-bg transition-all">View</button>
                     </div>
                   </div>
                 </div>
@@ -330,9 +270,11 @@ export default function LandingPage({ onSearch, isDark, toggleTheme }: LandingPa
             <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
             <h2 className="text-landing-bg text-3xl md:text-5xl font-black mb-6 max-w-2xl">Ready for your next adventure? Join 50,000+ campers.</h2>
             <p className="text-landing-bg/70 text-lg mb-10 max-w-xl">Get exclusive deals on campsites and gear straight to your inbox every week.</p>
-            <form className="w-full max-w-lg flex flex-col sm:flex-row gap-4 relative z-10" onSubmit={(e) => e.preventDefault()}>
-              <input type="email" className="flex-1 rounded-xl border-0 bg-white/20 placeholder:text-landing-bg/50 text-landing-bg focus:ring-2 focus:ring-landing-bg/20 h-14 px-6 font-medium" placeholder="Your email address" />
-              <button className="h-14 px-8 bg-landing-bg text-white font-bold rounded-xl hover:bg-slate-800 transition-colors">Join the Wild</button>
+            <form className="w-full max-w-lg flex flex-col sm:flex-row gap-4 relative z-10" onSubmit={handleSubscribe}>
+              <input type="email" required className="flex-1 rounded-xl border-0 bg-white/20 placeholder:text-landing-bg/50 text-landing-bg focus:ring-2 focus:ring-landing-bg/20 h-14 px-6 font-medium" placeholder="Your email address" />
+              <button className="h-14 px-8 bg-landing-bg text-white font-bold rounded-xl hover:bg-slate-800 transition-colors">
+                {subscribed ? 'Subscribed!' : 'Join the Wild'}
+              </button>
             </form>
           </div>
         </section>
