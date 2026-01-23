@@ -23,7 +23,7 @@ export const INITIAL_DESTINATIONS: Destination[] = [
     id: '4',
     name: 'Lake Louise',
     location: 'Banff, Canada',
-    image: 'https://images.unsplash.com/photo-1561563583-db610486c8d7?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1578508779918-6c843c086c23?auto=format&fit=crop&q=80&w=800'
   }
 ];
 
