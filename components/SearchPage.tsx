@@ -48,7 +48,7 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
   });
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-search-bg overflow-hidden text-slate-900 dark:text-white font-sans transition-colors duration-300">
+    <div className="fixed inset-0 flex flex-col bg-white dark:bg-search-bg overflow-hidden text-slate-900 dark:text-white font-sans transition-colors duration-300">
       {/* Header */}
       <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-landing-border px-4 md:px-10 py-3 bg-white dark:bg-search-bg z-20 shrink-0 transition-colors duration-300">
         <div className="flex items-center gap-4 md:gap-8 flex-1">
