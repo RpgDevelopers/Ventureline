@@ -5,7 +5,7 @@ export const INITIAL_DESTINATIONS: Destination[] = [
     id: '1',
     name: 'Yosemite Valley',
     location: 'California, USA',
-    image: 'https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1426604966848-d3ad1e27becc?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: '2',
@@ -17,13 +17,13 @@ export const INITIAL_DESTINATIONS: Destination[] = [
     id: '3',
     name: 'Swiss Alps',
     location: 'Bernese Oberland, CH',
-    image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: '4',
     name: 'Lake Louise',
     location: 'Banff, Canada',
-    image: 'https://images.unsplash.com/photo-1536637706725-c96e9916d664?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1561563583-db610486c8d7?auto=format&fit=crop&q=80&w=800'
   }
 ];
 
@@ -37,7 +37,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     price: 125,
     tags: ['WiFi', 'Fresh Water', 'Power'],
     isEco: true,
-    image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1492648272180-61e45a8d98a7?auto=format&fit=crop&q=80&w=800',
     description: 'Nestled in a vibrant meadow of wildflowers with a backdrop of snow-capped peaks, this eco-friendly stay offers the perfect blend of nature and comfort. Enjoy solar-powered amenities and fresh mountain spring water.',
     amenities: ['Solar Power', 'Spring Water', 'Composting Toilet', 'Fire Pit', 'Hiking Trails']
   },
@@ -50,7 +50,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     price: 210,
     tags: ['Firepit', 'Kitchen', 'Heater'],
     isNew: true,
-    image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1449156493391-d2cfa28e468b?auto=format&fit=crop&q=80&w=800',
     description: 'A modern A-frame cabin tucked away in the Catskills. Features a full chef\'s kitchen, wood-burning stove, and floor-to-ceiling windows for stargazing from the comfort of your bed.',
     amenities: ['Full Kitchen', 'Wood Stove', 'Hot Water', 'WiFi', 'Deck']
   },
@@ -70,7 +70,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     id: 's1',
     name: 'Emerald Bay Viewpoints',
     location: 'South Lake Tahoe, CA',
-    image: 'https://images.unsplash.com/photo-1548567117-02327f1c9bb6?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=800',
     rating: 4.9,
     reviews: 128,
     price: 75,
@@ -109,7 +109,7 @@ export const INITIAL_CAMPSITES: Campsite[] = [
     id: 'y1',
     name: 'Half Dome Village',
     location: 'Yosemite Valley, CA',
-    image: 'https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1537905569824-f89f14cceb68?auto=format&fit=crop&q=80&w=800',
     rating: 4.8,
     reviews: 320,
     price: 150,
