@@ -50,9 +50,6 @@ export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateB
                 {isDark ? 'light_mode' : 'dark_mode'}
               </span>
             </button>
-            <button className="hidden sm:flex h-10 px-5 items-center justify-center rounded-lg bg-primary text-landing-bg text-sm font-bold hover:opacity-90 transition-opacity">
-              Host your site
-            </button>
             <button className="flex h-10 px-5 items-center justify-center rounded-lg bg-white dark:bg-landing-surface border border-slate-200 dark:border-landing-border text-slate-900 dark:text-white text-sm font-bold hover:bg-slate-100 dark:hover:bg-landing-border transition-colors">
               Sign In
             </button>
