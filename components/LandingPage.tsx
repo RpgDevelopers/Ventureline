@@ -67,7 +67,7 @@ export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateB
             <div 
               className="relative min-h-[560px] flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden bg-cover bg-center" 
               style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAt4_hLM_cLJ7QUxrig16uIE1EQXEM4PG5N6sa0HCxqWulWdlJlOyQJ0dW5FrvoXmpq_foHq-D4EcS4xWnw9jLmLSSFGJNANKQLWWyO5elAbxL1wwWG-HUBRLWIZJh_cuQbdqPM3Em-C4LFgGIqAsBI3l6Ca2p3j1ObzALy0yP1yQ63IxbAgwK2nWZBEYb0wHSKNal9lGeiDGxdgNQpyqxl4fGe1Is8V7CJSD7fXuq6sEHVMFZwvss5fB58m9C-6bUgi1yst7Qe3KDk")`
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=1600")`
               }}
             >
               <div className="relative z-10 flex flex-col gap-6 text-center max-w-2xl mb-12">

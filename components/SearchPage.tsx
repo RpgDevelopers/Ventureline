@@ -96,7 +96,7 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
           </div>
           <div 
             className="hidden sm:block bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" 
-            style={{ backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuCWh8z9FozyNuQ_19Q_e3NQjORfS7wgOKDQvY9gi3jVszP-mDhojznCDvOoGQ58Uq-41AxoofP8FGwC4PotTYbMipDEzoG2odB2pU1xK9vFE5729q8HxffeHE8ViQ8Q6Cy7e8TRec5P63Y8FpKf8FTVCW2ksKMUShSdpOzunw7v4ZdSt_MtDsowgtutP-vXOsgOvSNdVDevO4MnFQ8CGUjwVNYtp80DPkq5kmN2qBfYjxqcnpZNRk3QgcpdxIUZ4u7Yc4N0lKUXi94V")` }}
+            style={{ backgroundImage: `url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200")` }}
           ></div>
         </div>
       </header>
@@ -207,9 +207,10 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
 
         {/* Right Panel: Map */}
         <div className="hidden lg:block flex-1 relative bg-slate-200 dark:bg-slate-800">
+           {/* Clearer high-res map image */}
            <div 
              className="absolute inset-0 bg-cover bg-center grayscale brightness-[0.8] dark:brightness-[0.4] opacity-80" 
-             style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuBz1JuDOACF4Gz3kFM9IvmDhNLjpCmF_Fj5WPIfy-_fDTxmaWejuUoCrf7krh-VLTZbju4lDClVKTkNFogjOs3HBX8oETgC-jRztqEEBuQfwWZbSR_eJeCXPenB-Zvo_nU6GeJp23GhWtLL0KH42qMLJ5Kij7CtV_dCgkwWxJy4C905JKjZmPR0FzAX-8ZdShPdfHE7RSaavt5aZQCGxmL3dztU3bZ2HS0Q17PkvCLMyjrwGeGw1dxujFAlhWRBNozj2LzbR2i1uJZu')` }}
+             style={{ backgroundImage: `url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000')` }}
            ></div>
            
            <div className="absolute inset-0 z-10 p-6 pointer-events-none">
