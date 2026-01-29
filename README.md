@@ -8,4 +8,5 @@ A premium camping discovery application featuring dark mode aesthetics, interact
 
 ## License
 
-Copyright (c) 2024 Jayson Dela Cruz. All rights reserved.
+Copyright © 2024 Jayson Dela Cruz. All rights reserved.
+
