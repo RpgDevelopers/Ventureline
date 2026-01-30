@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Campsite } from '../types';
 import { api } from '../services/api';
 import Footer from './Footer';
@@ -19,6 +19,14 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
   const [campsites, setCampsites] = useState<Campsite[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [filter, setFilter] = useState<'all' | 'eco' | 'pets' | 'instant'>('all');
+  
+  // Header auto-hide logic
+  const [showHeader, setShowHeader] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
+
+  // Map Zoom Logic
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     // Initial fetch
@@ -29,6 +37,31 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
     fetchData();
     setFavorites(api.getFavorites());
   }, [searchValue]);
+
+  // Scroll handler for the left panel
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!scrollRef.current) return;
+      const currentScrollY = scrollRef.current.scrollTop;
+      
+      if (currentScrollY > lastScrollY.current && currentScrollY > 60) {
+        setShowHeader(false); // Hide on scroll down
+      } else {
+        setShowHeader(true); // Show on scroll up
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    const element = scrollRef.current;
+    if (element) {
+      element.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      if (element) {
+        element.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,85 +81,95 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
     return true;
   });
 
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.5, 4));
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.5, 1));
+  };
+
   return (
     <div className="fixed inset-0 flex flex-col bg-white dark:bg-search-bg overflow-hidden text-slate-900 dark:text-white font-sans transition-colors duration-300 animate-fade-in">
-      {/* Header */}
-      <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-landing-border px-4 md:px-10 py-3 bg-white dark:bg-search-bg z-20 shrink-0 transition-colors duration-300">
-        <div className="flex items-center gap-4 md:gap-8 flex-1">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
-            <img src="https://cdn.imgchest.com/files/38408a6bf587.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
-            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white hidden md:block">Ventureline</span>
-          </div>
-          <form onSubmit={handleSearch} className="flex flex-col w-full md:max-w-md h-10">
-            <div className="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-none shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary/50">
-               <div className="text-slate-400 dark:text-[#9db8a6] flex bg-white dark:bg-landing-border items-center justify-center pl-4">
-                  <span className="material-symbols-outlined text-[20px]">search</span>
-               </div>
-               <input 
-                  type="text"
-                  className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden text-slate-900 dark:text-white focus:outline-0 focus:ring-0 border-none bg-white dark:bg-landing-border placeholder:text-slate-400 dark:placeholder:text-[#9db8a6] px-4 pl-2 text-sm font-normal leading-normal" 
-                  placeholder="Search campsites, parks, or cities..."
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-               />
+      {/* Header - Auto Hides */}
+      <div className={`flex flex-col z-20 shrink-0 transition-all duration-300 ease-in-out bg-white dark:bg-search-bg ${showHeader ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 -mt-20'}`}>
+        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-landing-border px-4 md:px-10 py-3">
+          <div className="flex items-center gap-4 md:gap-8 flex-1">
+            <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
+              <img src="https://cdn.imgchest.com/files/38408a6bf587.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
+              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white hidden md:block">Ventureline</span>
             </div>
-          </form>
-        </div>
-        
-        <div className="flex flex-1 justify-end gap-6 items-center">
-          <nav className="hidden lg:flex items-center gap-8">
-            <button onClick={() => setFilter('all')} className={`text-sm font-medium hover:text-primary transition-colors ${filter === 'all' ? 'text-primary' : 'text-slate-600 dark:text-white'}`}>Discover</button>
-            <button onClick={onNavigateBookings} className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Bookings</button>
-            <button onClick={onNavigateFavorites} className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Favorites</button>
-          </nav>
-          <div className="flex gap-2">
-            <button 
-              onClick={toggleTheme}
-              className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-landing-border text-slate-600 dark:text-white hover:bg-primary/20 transition-all"
-              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                {isDark ? 'light_mode' : 'dark_mode'}
-              </span>
+            <form onSubmit={handleSearch} className="flex flex-col w-full md:max-w-md h-10">
+              <div className="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-none shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary/50">
+                 <div className="text-slate-400 dark:text-[#9db8a6] flex bg-white dark:bg-landing-border items-center justify-center pl-4">
+                    <span className="material-symbols-outlined text-[20px]">search</span>
+                 </div>
+                 <input 
+                    type="text"
+                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden text-slate-900 dark:text-white focus:outline-0 focus:ring-0 border-none bg-white dark:bg-landing-border placeholder:text-slate-400 dark:placeholder:text-[#9db8a6] px-4 pl-2 text-sm font-normal leading-normal" 
+                    placeholder="Search campsites, parks, or cities..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                 />
+              </div>
+            </form>
+          </div>
+          
+          <div className="flex flex-1 justify-end gap-6 items-center">
+            <nav className="hidden lg:flex items-center gap-8">
+              <button onClick={() => setFilter('all')} className={`text-sm font-medium hover:text-primary transition-colors ${filter === 'all' ? 'text-primary' : 'text-slate-600 dark:text-white'}`}>Discover</button>
+              <button onClick={onNavigateBookings} className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Bookings</button>
+              <button onClick={onNavigateFavorites} className="text-slate-600 dark:text-white text-sm font-medium hover:text-primary transition-colors">Favorites</button>
+            </nav>
+            <div className="flex gap-2">
+              <button 
+                onClick={toggleTheme}
+                className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-landing-border text-slate-600 dark:text-white hover:bg-primary/20 transition-all"
+                title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              >
+                <span className="material-symbols-outlined text-[20px]">
+                  {isDark ? 'light_mode' : 'dark_mode'}
+                </span>
+              </button>
+              <button className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-landing-border text-slate-600 dark:text-white hover:bg-primary/20 transition-all">
+                 <span className="material-symbols-outlined text-[20px]">notifications</span>
+              </button>
+              <button className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-landing-border text-slate-600 dark:text-white hover:bg-primary/20 transition-all">
+                 <span className="material-symbols-outlined text-[20px]">account_circle</span>
+              </button>
+            </div>
+            <div 
+              className="hidden sm:block bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" 
+              style={{ backgroundImage: `url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200")` }}
+            ></div>
+          </div>
+        </header>
+
+        {/* Filter Bar */}
+        <div className="px-6 py-3 border-b border-slate-200 dark:border-landing-border bg-white dark:bg-search-bg z-10 flex items-center justify-between shrink-0">
+          <div className="flex gap-3 overflow-x-auto no-scrollbar mask-linear-fade">
+            <button onClick={() => setFilter('all')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'all' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
+               <span>All</span>
             </button>
-            <button className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-landing-border text-slate-600 dark:text-white hover:bg-primary/20 transition-all">
-               <span className="material-symbols-outlined text-[20px]">notifications</span>
+            <button onClick={() => setFilter('eco')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'eco' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
+               <span className="material-symbols-outlined text-[18px]">eco</span>
+               <span>Eco Friendly</span>
             </button>
-            <button className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-landing-border text-slate-600 dark:text-white hover:bg-primary/20 transition-all">
-               <span className="material-symbols-outlined text-[20px]">account_circle</span>
+            <button onClick={() => setFilter('pets')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'pets' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
+               <span className="material-symbols-outlined text-[18px]">pets</span>
+               <span>Pet Friendly</span>
             </button>
           </div>
-          <div 
-            className="hidden sm:block bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" 
-            style={{ backgroundImage: `url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200")` }}
-          ></div>
-        </div>
-      </header>
-
-      {/* Filter Bar */}
-      <div className="px-6 py-3 border-b border-slate-200 dark:border-landing-border bg-white dark:bg-search-bg z-10 flex items-center justify-between shrink-0 transition-colors duration-300">
-        <div className="flex gap-3 overflow-x-auto no-scrollbar mask-linear-fade">
-          <button onClick={() => setFilter('all')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'all' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
-             <span>All</span>
-          </button>
-          <button onClick={() => setFilter('eco')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'eco' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
-             <span className="material-symbols-outlined text-[18px]">eco</span>
-             <span>Eco Friendly</span>
-          </button>
-          <button onClick={() => setFilter('pets')} className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg border px-4 text-sm font-medium shadow-sm transition-colors whitespace-nowrap ${filter === 'pets' ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-landing-border border-slate-200 dark:border-none text-slate-700 dark:text-white hover:border-primary'}`}>
-             <span className="material-symbols-outlined text-[18px]">pets</span>
-             <span>Pet Friendly</span>
-          </button>
-        </div>
-        <div className="hidden md:flex items-center gap-2 pl-4">
-          <span className="text-xs text-slate-400 uppercase font-bold tracking-widest whitespace-nowrap">View:</span>
-          <div className="flex bg-slate-100 dark:bg-landing-border p-1 rounded-lg">
-             <button className="p-1 px-3 rounded-md bg-white dark:bg-[#3d5244] text-primary shadow-sm">
-                <span className="material-symbols-outlined text-[20px]">splitscreen</span>
-             </button>
-             <button className="p-1 px-3 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
-                <span className="material-symbols-outlined text-[20px]">list</span>
-             </button>
+          <div className="hidden md:flex items-center gap-2 pl-4">
+            <span className="text-xs text-slate-400 uppercase font-bold tracking-widest whitespace-nowrap">View:</span>
+            <div className="flex bg-slate-100 dark:bg-landing-border p-1 rounded-lg">
+               <button className="p-1 px-3 rounded-md bg-white dark:bg-[#3d5244] text-primary shadow-sm">
+                  <span className="material-symbols-outlined text-[20px]">splitscreen</span>
+               </button>
+               <button className="p-1 px-3 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+                  <span className="material-symbols-outlined text-[20px]">list</span>
+               </button>
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +177,7 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden">
         {/* Left Panel: List */}
-        <div className="w-full lg:w-[45%] xl:w-[500px] overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-search-bg border-r border-slate-200 dark:border-landing-border transition-colors duration-300">
+        <div ref={scrollRef} className="w-full lg:w-[50%] xl:w-[600px] overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-search-bg border-r border-slate-200 dark:border-landing-border transition-colors duration-300 z-10 relative">
           <div className="flex flex-wrap gap-2 p-6 pb-2">
             <span className="text-slate-400 dark:text-[#9db8a6] text-xs font-medium uppercase tracking-wider">Locations</span>
             <span className="text-slate-300 dark:text-landing-border text-xs">/</span>
@@ -206,46 +249,44 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
             ))}
           </div>
           
-          <Footer />
+          <Footer variant="sidebar" />
         </div>
 
         {/* Right Panel: Map */}
-        <div className="hidden lg:block flex-1 relative bg-slate-200 dark:bg-slate-800">
-           {/* Clearer high-res map image */}
+        <div className="hidden lg:block flex-1 relative bg-slate-200 dark:bg-slate-800 overflow-hidden">
+           {/* Scalable Map Container */}
            <div 
-             className="absolute inset-0 bg-cover bg-center grayscale brightness-[0.8] dark:brightness-[0.4] opacity-80" 
-             style={{ backgroundImage: `url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000')` }}
-           ></div>
-           
-           <div className="absolute inset-0 z-10 p-6 pointer-events-none">
-              {/* Controls */}
-              <div className="flex flex-col gap-2 absolute top-6 right-6 pointer-events-auto">
-                 <button className="w-10 h-10 bg-white dark:bg-search-surface rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:text-primary transition-colors border border-slate-200 dark:border-landing-border">
-                    <span className="material-symbols-outlined text-[20px]">add</span>
-                 </button>
-                 <button className="w-10 h-10 bg-white dark:bg-search-surface rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:text-primary transition-colors border border-slate-200 dark:border-landing-border">
-                    <span className="material-symbols-outlined text-[20px]">remove</span>
-                 </button>
-                 <button className="w-10 h-10 mt-4 bg-white dark:bg-search-surface rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:text-primary transition-colors border border-slate-200 dark:border-landing-border">
-                    <span className="material-symbols-outlined text-[20px]">my_location</span>
-                 </button>
-              </div>
+             className="w-full h-full relative transition-transform duration-300 ease-in-out origin-center"
+             style={{ transform: `scale(${zoom})` }}
+           >
+              {/* Map Background */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center grayscale brightness-[0.8] dark:brightness-[0.4] opacity-80" 
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000')` }}
+              ></div>
 
-              {/* Pins */}
+              {/* Pins - Counter scaled to maintain size */}
               {filteredCampsites.filter(s => s.coordinates).map((site) => (
                 <div 
                   key={site.id} 
-                  className="absolute pointer-events-auto transition-transform duration-300"
-                  style={{ top: site.coordinates?.top, left: site.coordinates?.left, transform: hoveredId === site.id ? 'scale(1.1) translateY(-10px)' : 'scale(1)' }}
+                  className="absolute pointer-events-auto transition-all duration-300"
+                  style={{ 
+                    top: site.coordinates?.top, 
+                    left: site.coordinates?.left, 
+                    zIndex: hoveredId === site.id ? 50 : 10,
+                  }}
                   onMouseEnter={() => setHoveredId(site.id)}
                   onMouseLeave={() => setHoveredId(null)}
                   onClick={() => onNavigateDetails(site.id)}
                 >
-                   <div className="relative group">
+                   <div 
+                      className="relative group origin-bottom"
+                      style={{ transform: `scale(${1/zoom}) ${hoveredId === site.id ? 'scale(1.2) translateY(-10px)' : ''}` }}
+                   >
                       <div className={`
                          px-3 py-1.5 rounded-full shadow-lg text-sm font-bold flex items-center gap-1 cursor-pointer transition-colors
                          ${hoveredId === site.id 
-                           ? 'bg-primary text-search-bg shadow-[0_0_20px_rgba(23,207,84,0.4)] z-50' 
+                           ? 'bg-primary text-search-bg shadow-[0_0_20px_rgba(23,207,84,0.4)]' 
                            : 'bg-white dark:bg-landing-border text-slate-900 dark:text-white hover:bg-primary hover:text-white'}
                       `}>
                          ${site.price}
@@ -255,6 +296,27 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
                    </div>
                 </div>
               ))}
+           </div>
+           
+           <div className="absolute inset-0 z-10 p-6 pointer-events-none">
+              {/* Controls */}
+              <div className="flex flex-col gap-2 absolute top-6 right-6 pointer-events-auto">
+                 <button 
+                  onClick={handleZoomIn}
+                  className="w-10 h-10 bg-white dark:bg-search-surface rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:text-primary transition-colors border border-slate-200 dark:border-landing-border"
+                 >
+                    <span className="material-symbols-outlined text-[20px]">add</span>
+                 </button>
+                 <button 
+                  onClick={handleZoomOut}
+                  className="w-10 h-10 bg-white dark:bg-search-surface rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:text-primary transition-colors border border-slate-200 dark:border-landing-border"
+                 >
+                    <span className="material-symbols-outlined text-[20px]">remove</span>
+                 </button>
+                 <button className="w-10 h-10 mt-4 bg-white dark:bg-search-surface rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:text-primary transition-colors border border-slate-200 dark:border-landing-border">
+                    <span className="material-symbols-outlined text-[20px]">my_location</span>
+                 </button>
+              </div>
 
               {/* Floating Bottom Tip */}
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 pointer-events-auto bg-search-bg/80 backdrop-blur-md border border-white/10 px-6 py-3 rounded-full flex items-center gap-4 shadow-xl">

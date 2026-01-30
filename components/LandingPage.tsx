@@ -16,6 +16,25 @@ export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateB
   const [dates, setDates] = useState('');
   const [guests, setGuests] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setShowHeader(false); // Hide when scrolling down
+      } else {
+        setShowHeader(true); // Show when scrolling up
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +50,11 @@ export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateB
   return (
     <div className="bg-slate-50 dark:bg-landing-bg w-full transition-colors duration-300 animate-fade-in">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-landing-border bg-white/80 dark:bg-landing-bg/80 backdrop-blur-md px-6 md:px-20 py-4 transition-colors duration-300">
+      <header 
+        className={`fixed top-0 left-0 right-0 z-50 w-full border-b border-solid border-slate-200 dark:border-landing-border bg-white/80 dark:bg-landing-bg/80 backdrop-blur-md px-6 md:px-20 py-4 transition-all duration-300 transform ${
+          showHeader ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
         <div className="max-w-[1280px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.location.reload()}>
             <img src="https://cdn.imgchest.com/files/38408a6bf587.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
@@ -59,7 +82,7 @@ export default function LandingPage({ onSearch, isDark, toggleTheme, onNavigateB
         </div>
       </header>
 
-      <main className="w-full">
+      <main className="w-full pt-20">
         {/* Hero Section */}
         <section className="relative w-full px-6 md:px-20 py-10">
           <div className="max-w-[1280px] mx-auto">

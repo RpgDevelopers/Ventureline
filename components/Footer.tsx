@@ -1,9 +1,15 @@
 import React from 'react';
 
-export default function Footer() {
+interface FooterProps {
+  variant?: 'default' | 'sidebar';
+}
+
+export default function Footer({ variant = 'default' }: FooterProps) {
+  const isSidebar = variant === 'sidebar';
+
   return (
-    <footer className="bg-slate-100 dark:bg-landing-bg border-t border-slate-200 dark:border-landing-border px-6 md:px-20 py-16 transition-colors duration-300">
-      <div className="max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12">
+    <footer className={`bg-slate-100 dark:bg-landing-bg border-t border-slate-200 dark:border-landing-border transition-colors duration-300 ${isSidebar ? 'px-6 py-10' : 'px-6 md:px-20 py-16'}`}>
+      <div className={`mx-auto grid gap-8 ${isSidebar ? 'grid-cols-2 max-w-full' : 'max-w-[1280px] grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12'}`}>
         <div className="col-span-2">
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center justify-center gap-3">
@@ -21,9 +27,11 @@ export default function Footer() {
             </a>
           </div>
         </div>
+        
+        {/* Navigation Columns - Always show all columns, but adjust grid for sidebar */}
         <div>
-          <h4 className="text-slate-900 dark:text-white font-bold mb-6">Discovery</h4>
-          <ul className="flex flex-col gap-4 text-sm text-slate-500 dark:text-white/40">
+          <h4 className="text-slate-900 dark:text-white font-bold mb-4 md:mb-6">Discovery</h4>
+          <ul className="flex flex-col gap-3 text-sm text-slate-500 dark:text-white/40">
             <li><a href="#" className="hover:text-primary transition-colors">Trending Now</a></li>
             <li><a href="#" className="hover:text-primary transition-colors">Last Minute Stays</a></li>
             <li><a href="#" className="hover:text-primary transition-colors">Eco Stays</a></li>
@@ -31,8 +39,8 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="text-slate-900 dark:text-white font-bold mb-6">Hosting</h4>
-          <ul className="flex flex-col gap-4 text-sm text-slate-500 dark:text-white/40">
+          <h4 className="text-slate-900 dark:text-white font-bold mb-4 md:mb-6">Hosting</h4>
+          <ul className="flex flex-col gap-3 text-sm text-slate-500 dark:text-white/40">
             <li><a href="#" className="hover:text-primary transition-colors">List Your Property</a></li>
             <li><a href="#" className="hover:text-primary transition-colors">Host Community</a></li>
             <li><a href="#" className="hover:text-primary transition-colors">Safety Standards</a></li>
@@ -40,8 +48,8 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="text-slate-900 dark:text-white font-bold mb-6">Support</h4>
-          <ul className="flex flex-col gap-4 text-sm text-slate-500 dark:text-white/40">
+          <h4 className="text-slate-900 dark:text-white font-bold mb-4 md:mb-6">Support</h4>
+          <ul className="flex flex-col gap-3 text-sm text-slate-500 dark:text-white/40">
             <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
             <li><a href="#" className="hover:text-primary transition-colors">Cancellation Options</a></li>
             <li><a href="#" className="hover:text-primary transition-colors">Trust & Safety</a></li>
@@ -49,12 +57,12 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="max-w-[1280px] mx-auto mt-16 pt-8 border-t border-slate-200 dark:border-landing-border flex flex-col md:row justify-between items-center gap-4 text-xs text-slate-400 dark:text-white/20">
+      <div className={`mx-auto pt-8 border-t border-slate-200 dark:border-landing-border flex flex-col md:row justify-between items-center gap-4 text-xs text-slate-400 dark:text-white/20 ${isSidebar ? 'mt-8' : 'mt-16 max-w-[1280px]'}`}>
         <p>© 2024 Ventureline Inc. All rights reserved.</p>
         <div className="flex gap-6">
-          <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Cookie Preferences</a>
+          <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy</a>
+          <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms</a>
+          <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Cookies</a>
         </div>
       </div>
     </footer>
