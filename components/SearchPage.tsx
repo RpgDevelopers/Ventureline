@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Campsite } from '../types';
 import { api } from '../services/api';
+import Footer from './Footer';
 
 interface SearchPageProps {
   onBack: () => void;
@@ -48,12 +49,13 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
   });
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-white dark:bg-search-bg overflow-hidden text-slate-900 dark:text-white font-sans transition-colors duration-300">
+    <div className="fixed inset-0 flex flex-col bg-white dark:bg-search-bg overflow-hidden text-slate-900 dark:text-white font-sans transition-colors duration-300 animate-fade-in">
       {/* Header */}
       <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-landing-border px-4 md:px-10 py-3 bg-white dark:bg-search-bg z-20 shrink-0 transition-colors duration-300">
         <div className="flex items-center gap-4 md:gap-8 flex-1">
           <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
-            <img src="https://cdn.imgchest.com/files/91aa51b5d4a5.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
+            <img src="https://cdn.imgchest.com/files/38408a6bf587.png" alt="Ventureline" className="h-10 md:h-12 w-auto object-contain" />
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white hidden md:block">Ventureline</span>
           </div>
           <form onSubmit={handleSearch} className="flex flex-col w-full md:max-w-md h-10">
             <div className="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden border border-slate-200 dark:border-none shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary/50">
@@ -132,7 +134,7 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden">
         {/* Left Panel: List */}
-        <div className="w-full lg:w-[45%] xl:w-[500px] overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-search-bg border-r border-slate-200 dark:border-landing-border pb-10 transition-colors duration-300">
+        <div className="w-full lg:w-[45%] xl:w-[500px] overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-search-bg border-r border-slate-200 dark:border-landing-border transition-colors duration-300">
           <div className="flex flex-wrap gap-2 p-6 pb-2">
             <span className="text-slate-400 dark:text-[#9db8a6] text-xs font-medium uppercase tracking-wider">Locations</span>
             <span className="text-slate-300 dark:text-landing-border text-xs">/</span>
@@ -203,6 +205,8 @@ export default function SearchPage({ onBack, initialLocation, isDark, toggleThem
               </div>
             ))}
           </div>
+          
+          <Footer />
         </div>
 
         {/* Right Panel: Map */}

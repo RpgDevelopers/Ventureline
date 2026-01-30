@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Campsite } from '../types';
 import { api } from '../services/api';
+import Footer from './Footer';
 
 interface FavoritesPageProps {
   onBack: () => void;
@@ -28,7 +29,7 @@ export default function FavoritesPage({ onBack, isDark, toggleTheme, onNavigateD
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-landing-bg text-slate-900 dark:text-white transition-colors duration-300 pb-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-landing-bg text-slate-900 dark:text-white transition-colors duration-300 flex flex-col animate-fade-in">
        <header className="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-landing-border bg-white/80 dark:bg-landing-bg/80 backdrop-blur-md px-6 md:px-20 py-4 transition-colors duration-300">
         <div className="max-w-[1280px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={onBack}>
@@ -43,7 +44,7 @@ export default function FavoritesPage({ onBack, isDark, toggleTheme, onNavigateD
         </div>
       </header>
 
-      <div className="max-w-[1280px] mx-auto px-6 py-12">
+      <div className="max-w-[1280px] mx-auto px-6 py-12 flex-1 w-full">
         <h1 className="text-3xl font-bold mb-8">Saved Stays</h1>
         
         {favorites.length === 0 ? (
@@ -97,6 +98,7 @@ export default function FavoritesPage({ onBack, isDark, toggleTheme, onNavigateD
             </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

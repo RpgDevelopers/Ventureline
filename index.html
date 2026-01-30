@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ventureline</title>
-    <link rel="icon" href="https://cdn.imgchest.com/files/9e68a1f9d5e1.png" />
+    <link rel="icon" type="image/png" href="https://cdn.imgchest.com/files/38408a6bf587.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -50,6 +50,15 @@
       .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
       .custom-scrollbar::-webkit-scrollbar-thumb { background: #29382e; border-radius: 10px; }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #17cf54; }
+
+      /* Animation for Page Transitions */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+      }
     </style>
   <script type="importmap">
 {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Campsite } from '../types';
 import { api } from '../services/api';
+import Footer from './Footer';
 
 interface DetailsPageProps {
   campsiteId: string;
@@ -49,7 +50,7 @@ export default function DetailsPage({ campsiteId, onBack, isDark, toggleTheme, o
   if (!campsite) return <div>Not found</div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-landing-bg text-slate-900 dark:text-white transition-colors duration-300 pb-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-landing-bg text-slate-900 dark:text-white transition-colors duration-300 animate-fade-in">
        {/* Header */}
        <header className="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-landing-border bg-white/80 dark:bg-landing-bg/80 backdrop-blur-md px-6 md:px-20 py-4 transition-colors duration-300">
         <div className="max-w-[1280px] mx-auto flex items-center justify-between">
@@ -164,6 +165,7 @@ export default function DetailsPage({ campsiteId, onBack, isDark, toggleTheme, o
              </div>
          </div>
       </div>
+      <Footer />
     </div>
   );
 }
